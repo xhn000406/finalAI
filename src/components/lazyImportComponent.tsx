@@ -1,6 +1,8 @@
-import { Suspense, type JSX, type LazyExoticComponent } from 'react';
+import { type JSX, type LazyExoticComponent, Suspense } from 'react';
 
-const LazyImportComponent = (props: { lazyChildren: LazyExoticComponent<() => JSX.Element> }) => {
+const LazyImportComponent = (props: {
+  lazyChildren: LazyExoticComponent<() => JSX.Element>;
+}) => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <props.lazyChildren />
