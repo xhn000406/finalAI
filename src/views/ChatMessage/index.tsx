@@ -1,4 +1,13 @@
-export default function ChatMessage() {
+export default function ChatMessage({handleIsShowSlider,isShowSliderValue}) {
+
+   
+
+    const handleIsShowSliderValue = ()=>{
+
+      handleIsShowSlider(!isShowSliderValue)
+
+    }
+
   return (
     <div className="flex flex-col h-screen">
       {/* 头部 */}
@@ -6,7 +15,7 @@ export default function ChatMessage() {
         {/* 头部左侧 */}
         <div className="h-full w-4/5 flex items-center">
           {/* 折叠icon */}
-          <div className="ml-4" style={{ marginLeft: '1rem' }}>
+          <div className="ml-4" style={{ marginLeft: '1rem' }} onClick={handleIsShowSliderValue}>
             <svg
               t="1753998315952"
               class="icon"

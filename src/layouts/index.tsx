@@ -8,14 +8,27 @@
  */
 import ChatMessage from '@/views/ChatMessage';
 import SliderBar from '@/views/SliderBar';
+import classnames from 'classnames'
+import { useState } from 'react';
 export default function Layouts() {
+
+  const [isShowSliderValue,setIsShowSliderValue] = useState(false)
+
+  const handleIsShowSlider = (e:boolean)=>{
+    console.log(e)
+
+    setIsShowSliderValue(e)
+  }
+
   return (
     <div className="flex">
-      <div className="hidden w-0 bg-amber-200 sm:inline-block sm:h-dvh sm:w-50">
+      <div className={classnames("w-0 bg-amber-200 sm:inline-block sm:h-dvh sm:w-50",{
+       'hidden':isShowSliderValue
+      })}>
         <SliderBar />
       </div>
       <div className="flex-1">
-        <ChatMessage />
+        <ChatMessage  handleIsShowSlider={handleIsShowSlider} isShowSliderValue={isShowSliderValue}  />
       </div>
     </div>
   );

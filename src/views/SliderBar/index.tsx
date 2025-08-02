@@ -1,3 +1,5 @@
 export default function SliderBar() {
-  return '侧边栏';
+  return(
+    <div className="w-60 h-dvh bg-amber-700" ></div>
+  );
 }
