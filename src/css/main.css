@@ -2,16 +2,11 @@
 @tailwind components;
 @tailwind utilities; */
 @import 'tailwindcss';
-* {
-  padding: 0px;
-  margin: 0px;
+
+.bg-gray {
+  background: rgb(102, 106, 102, 0.6);
 }
 
-body,
-html {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
+.bg-white {
+  background-color: rgb(243, 244, 246);
 }

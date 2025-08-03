@@ -10,7 +10,18 @@
 module.exports = {
   content: ['./src/**/*.{html,js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        gray: '#0006',
+        'custom-blue': '#1D4ED8',
+        'custom-gray': '#4B5563',
+      },
+      backgroundColor: {
+        gray: '#0006',
+        'custom-blue': '#1D4ED8',
+        'custom-gray': '#4B5563',
+      },
+    },
   },
   plugins: [],
   sidebar: {

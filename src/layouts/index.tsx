@@ -8,27 +8,47 @@
  */
 import ChatMessage from '@/views/ChatMessage';
 import SliderBar from '@/views/SliderBar';
-import classnames from 'classnames'
+import classnames from 'classnames';
 import { useState } from 'react';
+
+import { useSpring, animated } from 'react-spring';
+
 export default function Layouts() {
+  const [isShowSliderValue, setIsShowSliderValue] = useState(false);
 
-  const [isShowSliderValue,setIsShowSliderValue] = useState(false)
+  const props = useSpring({
+    width: isShowSliderValue ? 250 : 0,
+    opacity: isShowSliderValue ? 1 : 0,
+    overflow: 'hidden',
+  });
 
-  const handleIsShowSlider = (e:boolean)=>{
-    console.log(e)
+  const handleIsShowSlider = (e: boolean) => {
+    console.log(e);
+    setIsShowSliderValue(e);
+  };
 
-    setIsShowSliderValue(e)
-  }
+  const handleCloseSlider = () => {
+    setIsShowSliderValue(false);
+  };
 
   return (
     <div className="flex">
-      <div className={classnames("w-0 bg-amber-200 sm:inline-block sm:h-dvh sm:w-50",{
-       'hidden':isShowSliderValue
-      })}>
-        <SliderBar />
-      </div>
-      <div className="flex-1">
-        <ChatMessage  handleIsShowSlider={handleIsShowSlider} isShowSliderValue={isShowSliderValue}  />
+      <button
+        type="button"
+        onClick={handleCloseSlider}
+        className={classnames('z-50 w-0 bg-ambere-block sm:h-dvh sm:w-50 ', {
+          'absolute w-full bg-gray': isShowSliderValue,
+        })}
+      >
+        <animated.div style={props}>
+          <SliderBar />
+        </animated.div>
+      </button>
+      <div className="flex-1 z-10">
+        <ChatMessage
+          handleIsShowSlider={handleIsShowSlider}
+          isShowSliderValue={isShowSliderValue}
+        />
       </div>
     </div>
   );
