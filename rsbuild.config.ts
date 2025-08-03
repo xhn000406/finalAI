@@ -36,4 +36,14 @@ export default defineConfig({
       viewport: 'width=device-width, initial-scale=1.0',
     },
   },
+  server: {
+    proxy: {
+      // http://localhost:3000/api -> http://localhost:3000
+      // http://localhost:3000/api/foo -> http://localhost:3000/foo
+      '/api': {
+        target: 'http://localhost:9000',
+        pathRewrite: { '^/api': '' },
+      },
+    },
+  },
 });

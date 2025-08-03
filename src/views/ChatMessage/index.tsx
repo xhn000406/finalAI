@@ -8,6 +8,8 @@ import {
   SliderBarIcon,
   ThemeIcon,
 } from '../../components/svg';
+import { useEffect, useState } from 'react';
+import { sendChatMessageApi } from '@/api/chatApi';
 
 interface ChatMessageProps {
   handleIsShowSlider: (value: boolean) => void;
@@ -18,9 +20,21 @@ export default function ChatMessage({
   handleIsShowSlider,
   isShowSliderValue,
 }: ChatMessageProps) {
+  const [messageValue, setMessageValue] = useState('');
+
   const handleIsShowSliderValue = () => {
     handleIsShowSlider(!isShowSliderValue);
   };
+
+  const sendChatMessage = async () => {
+     const res =  await sendChatMessageApi({message:messageValue})
+     console.log(res)
+    setMessageValue('')
+  };
+
+  useEffect(()=>{
+   
+  })
 
   return (
     <div className="flex h-screen flex-col">
@@ -128,11 +142,20 @@ export default function ChatMessage({
       <div className="h-80">
         <div className="absolute right-0 bottom-3 left-0 flex items-center justify-center">
           <div className="mx-auto h-30 w-11/12 shrink-0 rounded-lg border-1 border-[rgb(99_102_241_/_1)] sm:w-1/2">
-            <div className="flex h-3/5 justify-center p-4">
+            <div className="flex h-3/5 pl-4">
               <textarea
-                style={{ paddingTop: '0.5rem' }}
                 placeholder="向 FinalAI 助手 发消息，使用 @ 搜索应用"
                 className=" max-h-[30vh] min-h-16 w-14/15 border-none pt-2 shadow-none outline-none"
+                value={messageValue}
+                onKeyDown={(e) => {
+                  // 仅在按下 Enter 且未按住 Shift 时发送消息（避免 Shift+Enter 换行被拦截）
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault(); // 阻止默认换行行为
+                    sendChatMessage();
+                  }
+                  // 确保不处理空格键，保持默认行为（插入空格）
+                }}
+                onChange={(e) => setMessageValue(e.target.value)}
               ></textarea>
             </div>
             <div className="flex h-2/5 justify-center">
@@ -159,13 +182,23 @@ export default function ChatMessage({
                     1111
                   </div>
                 </div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500">
+                {/* 沟通逻辑 */}
+                <button
+                  type="button"
+                  onClick={sendChatMessage}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      sendChatMessage();
+                    }
+                  }}
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500"
+                >
                   <div>
                     <Space>
                       <ChatMessageIcon></ChatMessageIcon>
                     </Space>
                   </div>
-                </div>
+                </button>
               </div>
             </div>
           </div>

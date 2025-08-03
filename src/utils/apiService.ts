@@ -37,6 +37,7 @@ export const apiPost = async <T>(
   config?: AxiosRequestConfig,
 ): Promise<T> => {
   try {
+
     const response = await axiosInstance.post<T>(url, data, config);
     return response.data;
   } catch (error) {
