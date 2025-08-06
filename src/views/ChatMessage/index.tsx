@@ -19,13 +19,14 @@ interface ChatMessageProps {
 export default function ChatMessage({
   handleIsShowSlider,
   isShowSliderValue,
+  
 }: ChatMessageProps) {
   const [messageValue, setMessageValue] = useState('');
 
   const handleIsShowSliderValue = () => {
     handleIsShowSlider(!isShowSliderValue);
   };
-
+  
   const sendChatMessage = async () => {
      const res =  await sendChatMessageApi({message:messageValue})
      console.log(res)
