@@ -6,12 +6,12 @@
  * @FilePath: \finalAI\src\layouts\index.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import ChatMessage from "@/views/ChatMessage";
-import SliderBar from "@/views/SliderBar";
-import classnames from "classnames";
-import { useState } from "react";
+import ChatMessage from '@/views/ChatMessage';
+import SliderBar from '@/views/SliderBar';
+import classnames from 'classnames';
+import { useState } from 'react';
 
-import { useSpring, animated } from "react-spring";
+import { useSpring, animated } from 'react-spring';
 
 export default function Layouts() {
   const [isShowSliderValue, setIsShowSliderValue] = useState(false);
@@ -19,16 +19,16 @@ export default function Layouts() {
   const props = useSpring({
     width: isShowSliderValue ? 250 : 0,
     opacity: isShowSliderValue ? 1 : 0,
-    overflow: "hidden",
+    overflow: 'hidden',
   });
 
   const handleIsShowSlider = (e: boolean) => {
-    console.log("e", e);
+    console.log('e', e);
     setIsShowSliderValue(e);
   };
 
   const handleCloseSlider = () => {
-    console.log("关闭折叠");
+    console.log('关闭折叠');
     setIsShowSliderValue(false);
   };
 
@@ -36,7 +36,8 @@ export default function Layouts() {
     <div className="flex">
       {/* 只在展开时显示的遮罩层 */}
       {isShowSliderValue && (
-        <div
+        <button
+          type="button"
           className="fixed inset-0 z-40 bg-gray bg-opacity-50"
           onClick={handleCloseSlider} // 点击遮罩层关闭
         />
@@ -44,7 +45,7 @@ export default function Layouts() {
 
       {/* 滑块容器 - 阻止点击事件冒泡 */}
       <div
-        className={classnames("z-50 w-0 sm:h-dvh sm:w-50", {
+        className={classnames('z-50 w-0 sm:h-dvh sm:w-50', {
           fixed: isShowSliderValue,
         })}
       >
