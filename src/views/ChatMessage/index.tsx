@@ -97,8 +97,10 @@ export default function ChatMessage({
       // if (currentStreamId !== streamId) return;
 
       try {
-        console.log(event);
-        const data = JSON.parse(event.data);
+        const sseContent = event.data.replace(/^data: /, '');
+        // 2. 解析处理后的JSON字符串
+        const data = JSON.parse(sseContent);
+        console.log(data)
         const chunk = data.msg || ''; // 后端返回的是{msg: "..."}
 
         if (chunk) {
@@ -121,6 +123,8 @@ export default function ChatMessage({
     eventSourceRef.current.onclose = () => {
       console.log('流正常结束');
       // 更新AI消息状态为"已完成"
+      eventSourceRef.current?.close();
+
       setMessages((prev) =>
         prev.map((msg) => {
           if (msg.id === aiMessageId) {
@@ -134,8 +138,7 @@ export default function ChatMessage({
 
     // 9. 处理连接错误
     eventSourceRef.current.onerror = (error) => {
-      console.log(messages);
-
+      
       console.error('流连接错误:', error);
       eventSourceRef.current?.close();
       // 错误时强制标记AI消息为"已完成"
