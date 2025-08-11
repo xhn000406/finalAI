@@ -207,7 +207,7 @@ console.log('执行了onerror',messages)
             type="button"
             className="ml-4"
             style={{ marginLeft: '1rem' }}
-            onClick={handleIsShowSliderValue}
+            
             aria-label="切换滑块值显示" // 增加屏幕阅读器说明
           >
             <div
@@ -215,7 +215,7 @@ console.log('执行了onerror',messages)
               style={{ marginLeft: '1rem' }}
             >
               <div>🟢 默认</div>
-              <div style={{ marginLeft: '0.3rem' }}>
+              <div onClick={handleIsShowSliderValue} style={{ marginLeft: '0.3rem' }}>
                 <Space>
                   <SliderBarIcon />
                 </Space>
@@ -323,7 +323,7 @@ console.log('执行了onerror',messages)
       <div className='h-[25%]'>
 
         <div className="absolute right-0 bottom-3 left-0 flex items-center justify-center">
-          <div className="mx-auto h-30 w-11/12 shrink-0 rounded-lg border-1 border-[rgb(99_102_241_/_1)] sm:w-1/2">
+          <div className="mx-auto h-30 w-11/12 shrink-0 rounded-lg border-1 border-gray-400 focus-within:border-[rgb(99_102_241)] sm:w-1/2">
             <div className="flex h-3/5 pl-4">
               <textarea
                 placeholder="向 FinalAI 助手 发消息，使用 @ 搜索应用"
@@ -349,7 +349,7 @@ console.log('执行了onerror',messages)
                       <AddFileIcon></AddFileIcon>
                     </Space>
                   </div>
-                  <div className="ml-6 flex h-8 w-16 items-center justify-center rounded-full border-2 border-blue-500">
+                  <div className="ml-3 flex h-8 w-16 items-center justify-center rounded-full border-2 border-[#e3e3e3]">
                     <div>
                       <Space>
                         <InferenceIcon></InferenceIcon>
@@ -357,11 +357,20 @@ console.log('执行了onerror',messages)
                     </div>
                     <div className="ml-0.5 text-sm">推理</div>
                   </div>
-                  <div className="ml-6 h-8 w-16 rounded-full border-2 border-blue-500">
-                    1111
-                  </div>
-                  <div className="ml-6 h-8 w-16 rounded-full border-2 border-blue-500">
-                    1111
+                  <div className="ml-3 flex h-8 w-16 items-center justify-center rounded-full border-2 border-[#e3e3e3]">
+                    <div>
+                      <Space>
+                        <InferenceIcon></InferenceIcon>
+                      </Space>
+                    </div>
+                    <div className="ml-0.5 text-sm">推理</div>
+                  </div><div className="ml-3 flex h-8 w-16 items-center justify-center rounded-full border-2 border-[#e3e3e3]">
+                    <div>
+                      <Space>
+                        <InferenceIcon></InferenceIcon>
+                      </Space>
+                    </div>
+                    <div className="ml-0.5 text-sm">推理</div>
                   </div>
                 </div>
                 {/* 沟通逻辑 */}

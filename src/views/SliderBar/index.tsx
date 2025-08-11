@@ -1,7 +1,11 @@
-import { Space } from 'antd';
+import { Space, type SiderProps } from 'antd';
 import { SliderBarIcon } from '../../components/svg';
 
-export default function SliderBar() {
+interface SliderBarProps {
+    onClose?: () => void
+  }
+export default function SliderBar({ onClose }: SliderBarProps) {
+  
   return (
     <div className=" h-dvh bg-white z-50 flex flex-col">
       <div className="flex   items-center justify-between p-4">
@@ -9,7 +13,7 @@ export default function SliderBar() {
           <img className='w-7 h-7' src="@/logo-89dd0dfe.png" />
         </div>
         <div className='text-[rgb(99_102_241_/_1)] font-bold'>FInalAi助手</div>
-        <div>
+        <div onClick={onClose}>
           <Space>
             <SliderBarIcon></SliderBarIcon>
           </Space>

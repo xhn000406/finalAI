@@ -31,7 +31,6 @@ export default function Layouts() {
     console.log('关闭折叠');
     setIsShowSliderValue(false);
   };
-
   return (
     <div className="flex">
       {/* 只在展开时显示的遮罩层 */}
@@ -53,7 +52,7 @@ export default function Layouts() {
           style={props}
           onClick={(e) => e.stopPropagation()} // 阻止点击滑块内容时关闭
         >
-          <SliderBar />
+          <SliderBar onClose={handleCloseSlider} />
         </animated.div>
       </div>
 
