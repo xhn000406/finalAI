@@ -9,6 +9,9 @@ import {
   ThemeIcon,
 } from '../../components/svg';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import MarkdownIt from 'markdown-it';
+import hljs from 'highlight.js'; // 导入highlight.js核心库
+import 'highlight.js/styles/github.css'; 
 import { sendChatMessageApi } from '@/api/chatApi';
 import Item from 'antd/es/list/Item';
 
@@ -35,6 +38,25 @@ export default function ChatMessage({
   const [currentStreamId, setCurrentStreamId] = useState(null);
 
   const eventSourceRef = useRef<EventSource | null>(null);
+
+  // 处理Markdown渲染的工具函数
+  const renderMarkdown = (content: string) => {
+    return { __html: md.render(content) };
+  };
+
+const md = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true,
+  highlight: function(str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return hljs.highlight(str, { language: lang }).value;
+      } catch (__) {}
+    }
+    return '';
+  }
+});
 
   const handleIsShowSliderValue = () => {
     handleIsShowSlider(!isShowSliderValue);
@@ -97,15 +119,16 @@ export default function ChatMessage({
       // if (currentStreamId !== streamId) return;
 
       try {
-        const sseContent = event.data.replace(/^data: /, '');
-        // 2. 解析处理后的JSON字符串
-        const data = JSON.parse(sseContent);
-        console.log(data)
-        const chunk = data.msg || ''; // 后端返回的是{msg: "..."}
-
+        console.log(event)
+        const rawData = event.data.replace(/^data:\s*/, ''); 
+        // 2. 解析JSON
+        const data = JSON.parse(rawData); 
+        // 3. 获取msg字段
+        const chunk = data.msg || ''; 
         if (chunk) {
           setMessages((prev) =>
             prev.map((msg) => {
+              console.log(msg)
               // 找到当前AI消息，拼接内容
               if (msg.id === aiMessageId) {
                 return { ...msg, content: msg.content + chunk };
@@ -121,10 +144,8 @@ export default function ChatMessage({
 
     // 8. 处理流关闭（后端结束时触发）
     eventSourceRef.current.onclose = () => {
-      console.log('流正常结束');
+console.log('执行了onclose')
       // 更新AI消息状态为"已完成"
-      eventSourceRef.current?.close();
-
       setMessages((prev) =>
         prev.map((msg) => {
           if (msg.id === aiMessageId) {
@@ -138,10 +159,14 @@ export default function ChatMessage({
 
     // 9. 处理连接错误
     eventSourceRef.current.onerror = (error) => {
-      
-      console.error('流连接错误:', error);
+
+   
+
       eventSourceRef.current?.close();
+        //  setHtml(md.render(messages[messages.length - 1]))
       // 错误时强制标记AI消息为"已完成"
+      // console.error('流连接错误:', error);
+
       setMessages((prev) =>
         prev.map((msg) => {
           if (msg.id === aiMessageId) {
@@ -150,10 +175,12 @@ export default function ChatMessage({
           return msg;
         }),
       );
-      console.log(messages);
+console.log('执行了onerror',messages)
+
       setIsStreaming(false);
     };
-  }, [inputMessageValue, isStreaming, currentStreamId]); // 完整依赖
+  }, [inputMessageValue, isStreaming, currentStreamId,messages]); // 完整依赖
+
 
   const sendChatMessage = () => {
     handleStreamMessage();
@@ -216,7 +243,7 @@ export default function ChatMessage({
 
       {/* main */}
       {!messages.length && (
-        <div className="flex-1 overflow-auto pb-32">
+        <div className="flex-1 overflow-auto h-[75%]">
           <div className="flex min-h-full flex-col items-center justify-center">
             <div className="text-[rgb(99_102_241_/_1)] text-3xl font-bold">
               FinalAI 助手
@@ -276,13 +303,25 @@ export default function ChatMessage({
       {messages.length > 0 && (
         <div className="flex-1 overflow-auto ">
           {messages.map((item: Message) => {
-            return <div key={item.id}>{item.content}</div>;
+           return   <div key={item.id}>
+
+              {item.sender === 'ai' ? (
+                  <div 
+                    dangerouslySetInnerHTML={renderMarkdown(item.content)} 
+                    className="prose prose-sm max-w-none" // 可以使用prose类美化markdown样式
+                  />
+                ) : (
+                  item.content
+                )}
+             </div>   
+                
           })}
         </div>
       )}
 
       {/* 底部 */}
-      <div className="h-40">
+      <div className='h-[25%]'>
+
         <div className="absolute right-0 bottom-3 left-0 flex items-center justify-center">
           <div className="mx-auto h-30 w-11/12 shrink-0 rounded-lg border-1 border-gray-400 focus-within:border-[rgb(99_102_241)] sm:w-1/2">
             <div className="flex h-3/5 pl-4">
