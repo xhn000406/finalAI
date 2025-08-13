@@ -8,7 +8,7 @@ import {
   SliderBarIcon,
   ThemeIcon,
 } from '../../components/svg';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState,useLayoutEffect } from 'react';
 import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js'; // 导入highlight.js核心库
 import 'highlight.js/styles/github.css'; 
@@ -38,6 +38,30 @@ export default function ChatMessage({
   const [currentStreamId, setCurrentStreamId] = useState(null);
 
   const eventSourceRef = useRef<EventSource | null>(null);
+
+  // 新增：用于滚动到底部的ref
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  // 滚动底部函数
+  const scrollToBottom = () => {
+   if(messagesEndRef.current) {
+    messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight
+   }
+  }
+  // 消息更新自动滚动底部
+  useEffect(()=>{
+    scrollToBottom();
+  },[messages])// 依赖messages，每次消息更新都会触发滚动
+
+  // 锁定页面滚动
+  useLayoutEffect(()=>{
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = ''
+    }
+  },[])
+
 
   // 处理Markdown渲染的工具函数
   const renderMarkdown = (content: string) => {
@@ -197,9 +221,9 @@ console.log('执行了onerror',messages)
   }, []);
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex flex-col h-screen max-h-screen overflow-hidden">
       {/* 头部 */}
-      <div className="flex h-16 justify-between">
+      <div className="flex h-16 justify-between ">
         {/* 头部左侧 */}
         <div className="flex h-full w-4/5 items-center">
           {/* 折叠icon */}
@@ -240,10 +264,11 @@ console.log('执行了onerror',messages)
           </div>
         </div>
       </div>
-
+      
       {/* main */}
+      <div className='flex-1 min-h-0 overflow-hidden'>
       {!messages.length && (
-        <div className="flex-1 overflow-auto h-[75%]">
+        <div className="flex min-h-full flex-col items-center justify-center overflow-y-auto">
           <div className="flex min-h-full flex-col items-center justify-center">
             <div className="text-[rgb(99_102_241_/_1)] text-3xl font-bold">
               FinalAI 助手
@@ -299,31 +324,32 @@ console.log('执行了onerror',messages)
             {/* 这里可以添加更多内容，会自动滚动 */}
           </div>
       )}
-
+      
       {messages.length > 0 && (
-        <div className="flex-1 overflow-auto ">
+        <div ref={messagesEndRef} className="h-full overflow-y-auto pb-4 ">
           {messages.map((item: Message) => {
-           return   <div key={item.id}>
+           return   <div key={item.id} className='px-4 py-2'>
 
               {item.sender === 'ai' ? (
                   <div 
                     dangerouslySetInnerHTML={renderMarkdown(item.content)} 
-                    className="prose prose-sm max-w-none" // 可以使用prose类美化markdown样式
+                    className="prose prose-sm max-w-none break-words overflow-auto" // 可以使用prose类美化markdown样式
                   />
                 ) : (
-                  item.content
+                  <div className='whitespace-pre-wrap break-words'>{item.content}</div>
                 )}
              </div>   
                 
           })}
+          <div ref={messagesEndRef} />
         </div>
       )}
-
+      </div>
       {/* 底部 */}
-      <div className='h-[25%]'>
+      {/* <div className='h-[25%] flex items-center'> */}
 
-        <div className="absolute right-0 bottom-3 left-0 flex items-center justify-center">
-          <div className="mx-auto h-30 w-11/12 shrink-0 rounded-lg border-1 border-gray-400 focus-within:border-[rgb(99_102_241)] sm:w-1/2">
+        <div className="flex-none py-3">
+          <div className="mx-auto h-30 w-11/12 max-w-2xl shrink-0 rounded-lg border-1 border-gray-400 focus-within:border-[rgb(99_102_241)] sm:w-1/2">
             <div className="flex h-3/5 pl-4">
               <textarea
                 placeholder="向 FinalAI 助手 发消息，使用 @ 搜索应用"
@@ -395,6 +421,6 @@ console.log('执行了onerror',messages)
           </div>
         </div>
       </div>
-    </div>
+    // </div>
   );
 }
