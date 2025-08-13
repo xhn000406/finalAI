@@ -222,7 +222,7 @@ export default function ChatMessage({
               FinalAI 助手
             </div>
             {/* 方块盒子 */}
-            <div className="mt-10 w-9/10" style={{ marginTop: '2rem' }}>
+            <div className="mt-10 w-9/10 flex justify-center" style={{ marginTop: '2rem' }}>
               <div className="w-full md:max-w-[40rem]">
                 <div className=" grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                   <div className="flex h-20 items-center justify-center space-y-4 rounded-xl border-1 border-[#e3e3e3]">
@@ -268,13 +268,13 @@ export default function ChatMessage({
                 </div>
               </div>
             </div>
+            </div>
             {/* 这里可以添加更多内容，会自动滚动 */}
           </div>
-        </div>
       )}
 
       {messages.length > 0 && (
-        <div className="flex-1 overflow-auto pb-32">
+        <div className="flex-1 overflow-auto ">
           {messages.map((item: Message) => {
             return <div key={item.id}>{item.content}</div>;
           })}
@@ -282,7 +282,7 @@ export default function ChatMessage({
       )}
 
       {/* 底部 */}
-      <div className="h-80">
+      <div className="h-40">
         <div className="absolute right-0 bottom-3 left-0 flex items-center justify-center">
           <div className="mx-auto h-30 w-11/12 shrink-0 rounded-lg border-1 border-gray-400 focus-within:border-[rgb(99_102_241)] sm:w-1/2">
             <div className="flex h-3/5 pl-4">
